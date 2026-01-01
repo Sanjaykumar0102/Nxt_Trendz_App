@@ -58,20 +58,25 @@ class ProductItemDetails extends Component {
       },
       method: 'GET',
     }
-    const response = await fetch(apiUrl, options)
-    if (response.ok) {
-      const fetchedData = await response.json()
-      const updatedData = this.getFormattedData(fetchedData)
-      const updatedSimilarProductsData = fetchedData.similar_products.map(
-        eachSimilarProduct => this.getFormattedData(eachSimilarProduct),
-      )
-      this.setState({
-        productData: updatedData,
-        similarProductsData: updatedSimilarProductsData,
-        apiStatus: apiStatusConstants.success,
-      })
-    }
-    if (response.status === 404) {
+    try {
+      const response = await fetch(apiUrl, options)
+      if (response.ok) {
+        const fetchedData = await response.json()
+        const updatedData = this.getFormattedData(fetchedData)
+        const updatedSimilarProductsData = fetchedData.similar_products.map(
+          eachSimilarProduct => this.getFormattedData(eachSimilarProduct),
+        )
+        this.setState({
+          productData: updatedData,
+          similarProductsData: updatedSimilarProductsData,
+          apiStatus: apiStatusConstants.success,
+        })
+      } else {
+        this.setState({
+          apiStatus: apiStatusConstants.failure,
+        })
+      }
+    } catch (error) {
       this.setState({
         apiStatus: apiStatusConstants.failure,
       })
