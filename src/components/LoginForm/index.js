@@ -6,10 +6,11 @@ import './index.css'
 
 class LoginForm extends Component {
   state = {
-    username: '',
-    password: '',
+    username: 'rahul',
+    password: 'rahul@2021',
     showSubmitError: false,
     errorMsg: '',
+    showPassword: false,
   }
 
   onChangeUsername = event => {
@@ -18,6 +19,10 @@ class LoginForm extends Component {
 
   onChangePassword = event => {
     this.setState({password: event.target.value})
+  }
+
+  onChangeShowPassword = event => {
+    this.setState({showPassword: event.target.checked})
   }
 
   onSubmitSuccess = jwtToken => {
@@ -56,7 +61,7 @@ class LoginForm extends Component {
   }
 
   renderPasswordField = () => {
-    const {password} = this.state
+    const {password, showPassword} = this.state
 
     return (
       <>
@@ -64,7 +69,7 @@ class LoginForm extends Component {
           PASSWORD
         </label>
         <input
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           id="password"
           className="password-input-field"
           value={password}
@@ -96,7 +101,7 @@ class LoginForm extends Component {
   }
 
   render() {
-    const {showSubmitError, errorMsg} = this.state
+    const {showSubmitError, errorMsg, showPassword} = this.state
     const jwtToken = Cookies.get('jwt_token')
 
     if (jwtToken !== undefined) {
@@ -123,9 +128,21 @@ class LoginForm extends Component {
           />
           <div className="input-container">{this.renderUsernameField()}</div>
           <div className="input-container">{this.renderPasswordField()}</div>
+          <div className="checkbox-container">
+            <input
+              type="checkbox"
+              id="showPassword"
+              checked={showPassword}
+              onChange={this.onChangeShowPassword}
+            />
+            <label htmlFor="showPassword">Show Password</label>
+          </div>
           <button type="submit" className="login-button">
             Login
           </button>
+          <p className="helper-text">
+            Login and explore with pre-filled credentials
+          </p>
           {showSubmitError && <p className="error-message">*{errorMsg}</p>}
         </form>
       </div>
